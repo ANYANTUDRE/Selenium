@@ -1,8 +1,8 @@
-import booking.constants as const
+from bot.booking.constants import BASE_URL
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from bot.booking.booking_filtration import BookingFiltration
 
 
 class Booking(webdriver.Chrome):
@@ -24,7 +24,7 @@ class Booking(webdriver.Chrome):
             self.quit()
 
     def land_first_page(self):
-        self.get(const.BASE_URL)
+        self.get(BASE_URL)
 
     # def change_currency(self, currency=None):
         """currency_element = self.driver.find_element(
@@ -46,8 +46,7 @@ class Booking(webdriver.Chrome):
         search_field.send_keys(place_to_go)
 
         first_result = self.find_element(by=By.CSS_SELECTOR,
-                                                value='li[data-i="0"]'
-        )
+                                         value='li[data-i="0"]')
         first_result.click()
 
     def select_dates(self, check_in_date, check_out_date):
@@ -69,11 +68,13 @@ class Booking(webdriver.Chrome):
         """
 
     def select_adults(self, count=1):
-        selection_element = self.find_element(By.ID ,'xp__guests__toggle')
+        selection_element = self.find_element(By.ID,
+                                              'xp__guests__toggle')
         selection_element.click()
 
         while True:
-            decrease_adults_element = self.find_element(By.CSS_SELECTOR, 'button[aria-label="Supprimer des Adultes"]')
+            decrease_adults_element = self.find_element(By.CSS_SELECTOR,
+                                                        'button[aria-label="Supprimer des Adultes"]')
 
             decrease_adults_element.click()
             # If the value of adults reaches 1, then we should get out
@@ -87,14 +88,16 @@ class Booking(webdriver.Chrome):
                 break
 
         increase_button_element = self.find_element(By.CSS_SELECTOR,
-            'button[aria-label="Ajouter des Adultes"]'
-        )
+                                                    'button[aria-label="Ajouter des Adultes"]')
 
         for _ in range(count - 1):
             increase_button_element.click()
 
     def click_search(self):
         search_button = self.find_element(By.CSS_SELECTOR,
-            'button[type="submit"]'
-        )
+                                          'button[type="submit"]')
         search_button.click()
+
+    def apply_filtrations(self):
+        filtration = BookingFiltration(driver=self)
+        filtration.apply_star_rating(3, 4, 5)

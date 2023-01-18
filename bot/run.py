@@ -8,3 +8,4 @@ with Booking() as bot:
                      check_out_date='2023-02-10')
     bot.select_adults(count=9)
     bot.click_search()
+    bot.apply_filtrations()
