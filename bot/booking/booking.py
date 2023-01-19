@@ -3,6 +3,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bot.booking.booking_filtration import BookingFiltration
+from bot.booking.booking_report import BookingReport
 
 
 class Booking(webdriver.Chrome):
@@ -101,3 +102,10 @@ class Booking(webdriver.Chrome):
     def apply_filtrations(self):
         filtration = BookingFiltration(driver=self)
         filtration.apply_star_rating(3, 4, 5)
+
+    def report_results(self):               # search_results_table
+        hotel_boxes = self.find_element(By.ID,
+                                        'search_results_table')
+        report = BookingReport(hotel_boxes)
+        print(report.pull_deal_box_attributes())
+
